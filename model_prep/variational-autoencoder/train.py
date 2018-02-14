@@ -1,8 +1,8 @@
 import argparse
 from pathlib import Path
 
-from vae.model import VariationalAutoencoder
-from vae.dataset import Dataset
+from model import VariationalAutoencoder
+from dataset import Dataset
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="This script will train an autoencoder and save the trained encoder"
@@ -30,6 +30,6 @@ if __name__ == "__main__":
 
     # Save the encoder and decoder
     Path(args.output_dir).mkdir(exist_ok=True)
-    name = "_ld_{}_e_{}.h5".format(vae.latent_dim, vae.epochs)
+    name = "_dims_{}x{}_ld_{}_e_{}.h5".format(vae.width, vae.height, vae.latent_dim, vae.epochs)
     encoder.save(str(Path(args.output_dir) / ("Encoder" + name)))
     decoder.save(str(Path(args.output_dir) / ("Decoder" + name)))

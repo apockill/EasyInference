@@ -22,7 +22,7 @@ class CustomVariationalLossLayer(Layer):
         x = kb.flatten(x)
         x_decoded_mean_squash = kb.flatten(x_decoded_mean_squash)
 
-        xent_loss = self.height * self.width * 1metrics.binary_crossentropy(x, x_decoded_mean_squash)
+        xent_loss = self.height * self.width * metrics.binary_crossentropy(x, x_decoded_mean_squash)
         kl_loss = - 0.5 * kb.mean(1 + z_log_var - kb.square(z_mean) - kb.exp(z_log_var), axis=-1)
         return kb.mean(xent_loss + kl_loss)
 
@@ -67,9 +67,11 @@ class VariationalAutoencoder:
 
         # Prepare the dataset
         x_train = x_train.astype('float32') / 255.
+        print(x_train.shape)
         x_train = x_train.reshape((x_train.shape[0],) + (self.height, self.width, self.channels))
+        print(x_train.shape)
         x_test = x_test.astype('float32') / 255.
-        x_test = x_test.reshape((x_test.shape[0],) + (self.height, self.width, self.channels))
+        # x_test = x_test.reshape((x_test.shape[0],) + (self.height, self.width, self.channels))
 
         # Train
         vae.fit(x_train,
@@ -89,11 +91,13 @@ class VariationalAutoencoder:
         return encoder, decoder
 
     def encoder(self, x):
-        # Encoder architecture
+        # Reshape x to a flat array
+        input_reshape = Reshape((self.height, self.width, self.channels))(x)
 
+        # Encoder architecture
         conv_1 = Conv2D(self.channels,
                         kernel_size=(2, 2),
-                        padding='same', activation='relu')(x)
+                        padding='same', activation='relu')(input_reshape)
         conv_2 = Conv2D(self.filters,
                         kernel_size=(2, 2),
                         padding='same', activation='relu',

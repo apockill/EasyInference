@@ -39,6 +39,11 @@ class Dataset:
         return len(self.img_paths)
 
     def load(self):
+        """
+        Return two arrays:
+        x_train: [img_bgr, img_bgr, img_bgr]
+        x_test: Same as x_train, but the images are for testing only.
+        """
         num_test = len(self) * self.fraction_test
 
         x_test = []

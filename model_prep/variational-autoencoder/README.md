@@ -5,6 +5,11 @@ I modified it to be object oriented and trainable in a very simple way.
 
 I used it originally for my Reinforcement Learning class when implementing a Model-Free Episodic learner. 
 
+## Usage
+### The easy way
+Run train.py with the correct arguments!
+
+### In-Depth Usage
 Usage example:
 ```python
 from model import VariationalAutoencoder

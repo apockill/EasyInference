@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-import inference.loading as loading
+import easyinference.loading as loading
 
 
 """
@@ -17,6 +17,7 @@ All credit goes to them. This is simply a wrapper around the trained model.
 
 
 class ImageSegmenter:
+
     def __init__(self, model_bytes, labels_unparsed):
         # Parse everything
         self.label_map = json.loads(labels_unparsed)
@@ -46,10 +47,6 @@ class ImageSegmenter:
         return Segmentation(out, self.label_map)
 
 
-    def close(self):
-        self.session.close()
-
-
 class Segmentation:
     """ This is the output prediction from ImageSegmenter """
     def __init__(self, segmentation, label_map):
@@ -65,7 +62,7 @@ class Segmentation:
         """Decode batch of segmentation masks.
 
         Args:
-          mask: result of inference after taking argmax.
+          mask: result of easyinference after taking argmax.
           num_images: number of images to decode from the batch.
           num_classes: number of classes to predict (including background).
 
