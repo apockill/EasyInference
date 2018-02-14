@@ -7,13 +7,13 @@ from dataset import Dataset
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="This script will train an autoencoder and save the trained encoder"
                                                  "and decoder to a specified directory.")
-    parser.add_argument('-i', '--image_dir', type=str, required=True,
+    parser.add_argument('-i', '--image-dir', type=str, required=True,
                         help='The directory where the images for training are saved')
-    parser.add_argument('-d', '--output_dir', type=str, default="./models/",
+    parser.add_argument('-d', '--output-dir', type=str, default="./models/",
                         help='The directory where the trained encoder and decoder files will be saved')
     parser.add_argument('--resolution', type=int, nargs=2, required=True,
                         help='The image width, height, and channels that the network will accept as input')
-    parser.add_argument('--latent_dim', type=int, default=2,
+    parser.add_argument('--latent-dim', type=int, default=2,
                         help='The size of the bottleneck vector in the autonecoder')
     parser.add_argument('--epochs', type=int, default=1000,
                         help='How long you want the training to go on for. Usually > 1000')

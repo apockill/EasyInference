@@ -11,13 +11,27 @@ if __name__ == "__main__":
                         help="The path to the encoder model")
     parser.add_argument("-d", "--decoder", type=str, required=True,
                         help="The path to the decoder model")
-    parser.add_argument("-i", "--image", type=str, required=True,
-                        help="The video to run through the encoder/decoder, one frame at a time/")
+    parser.add_argument("-i", "--images", type=str, required=True,
+                        help="The directory of images to run through the encoder+decoder one at a time")
     args = parser.parse_args()
 
 
     encoder = VariationalEncoder.from_path(args.encoder)
     decoder = VariationalDecoder.from_path(args.decoder)
 
-    img = cv2.imread(args.image)
-    pred = encoder.predict([img])
+    for img_path in Path(args.images).glob("*.png"):
+
+        # Load the image
+        img = cv2.imread(str(img_path))
+
+        # Encode the image
+        pred = encoder.predict([img])
+
+        # Decode the image
+        img_p = decoder.predict(pred)
+
+        # Show the encoded and decoded images
+        cv2.imshow("INPUT", img)
+        cv2.imshow("OUTPUT", img_p[0])
+
+        while cv2.waitKey(1) != ord(' '): pass

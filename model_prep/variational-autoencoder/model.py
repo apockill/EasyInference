@@ -57,7 +57,7 @@ class VariationalAutoencoder:
         # Build the model equation
         x = Input(shape=(self.height, self.width, self.channels))
         encoded, z_mean, z_log_var = self.encoder(x)
-        decoded = self.decoder(encoded)
+        decoded = self.decoder(encoded, build_ops=True)
         y = CustomVariationalLossLayer(self.width, self.height)([x, decoded, z_mean, z_log_var])
 
         # Initialize the Keras model
@@ -67,11 +67,8 @@ class VariationalAutoencoder:
 
         # Prepare the dataset
         x_train = x_train.astype('float32') / 255.
-        print(x_train.shape)
         x_train = x_train.reshape((x_train.shape[0],) + (self.height, self.width, self.channels))
-        print(x_train.shape)
         x_test = x_test.astype('float32') / 255.
-        # x_test = x_test.reshape((x_test.shape[0],) + (self.height, self.width, self.channels))
 
         # Train
         vae.fit(x_train,
@@ -81,11 +78,13 @@ class VariationalAutoencoder:
                 validation_data=(x_test, None))
 
         # Create the encoder that was learned
+        # encoder_input = Input(shape=(self.height, self.width, self.channels))
+        # encoded = self.encoder(encoder_input)[1]
         encoder = Model(x, z_mean)
 
         # Create the decoder that was learned
         decoder_input = Input(shape=(self.latent_dim, ))
-        decoded = self.decoder(decoder_input)
+        decoded = self.decoder(decoder_input, build_ops=False)
         decoder = Model(decoder_input, decoded)
 
         return encoder, decoder
@@ -120,41 +119,48 @@ class VariationalAutoencoder:
         z = Lambda(self._sampling, output_shape=(self.latent_dim,))([z_mean, z_log_var])
         return z, z_mean, z_log_var
 
-    def decoder(self, z):
-        # Decoder architecture
-        decoder_hid = Dense(self.intermediate_dim, activation='relu')
-        decoder_upsample = Dense(self.filters * int(self.height / 2 * self.width / 2), activation='relu')
+    def decoder(self, z, build_ops=True):
+        """
+        :param z: The input array to the encoder, a latent space of length self.latent_dim
+        :param build_ops: If True, it will initizalize the parameters for this operation from scratch. If false,
+        it will keep the parameters that have already been initialized
+        :return:
+        """
+        if build_ops:
+            # Decoder architecture
+            self.decoder_hid = Dense(self.intermediate_dim, activation='relu')
+            self.decoder_upsample = Dense(self.filters * int(self.height / 2 * self.width / 2), activation='relu')
 
-        output_shape = (self.batch_size, int(self.height / 2), int(self.width / 2), self.filters)
+            self.output_shape = (self.batch_size, int(self.height / 2), int(self.width / 2), self.filters)
 
-        decoder_reshape = Reshape(output_shape[1:])
-        decoder_deconv_1 = Conv2DTranspose(self.filters,
-                                           kernel_size=self.num_conv,
-                                           padding='same',
-                                           strides=1,
-                                           activation='relu')
-        decoder_deconv_2 = Conv2DTranspose(self.filters,
-                                           kernel_size=self.num_conv,
-                                           padding='same',
-                                           strides=1,
-                                           activation='relu')
-        decoder_deconv_3_upsamp = Conv2DTranspose(self.filters,
-                                                  kernel_size=(3, 3),
-                                                  strides=(2, 2),
-                                                  padding='valid',
-                                                  activation='relu')
-        decoder_mean_squash = Conv2D(self.channels,
-                                     kernel_size=2,
-                                     padding='valid',
-                                     activation='sigmoid')
+            self.decoder_reshape = Reshape(self.output_shape[1:])
+            self.decoder_deconv_1 = Conv2DTranspose(self.filters,
+                                               kernel_size=self.num_conv,
+                                               padding='same',
+                                               strides=1,
+                                               activation='relu')
+            self.decoder_deconv_2 = Conv2DTranspose(self.filters,
+                                               kernel_size=self.num_conv,
+                                               padding='same',
+                                               strides=1,
+                                               activation='relu')
+            self.decoder_deconv_3_upsamp = Conv2DTranspose(self.filters,
+                                                      kernel_size=(3, 3),
+                                                      strides=(2, 2),
+                                                      padding='valid',
+                                                      activation='relu')
+            self.decoder_mean_squash = Conv2D(self.channels,
+                                         kernel_size=2,
+                                         padding='valid',
+                                         activation='sigmoid')
 
-        hid_decoded = decoder_hid(z)
-        up_decoded = decoder_upsample(hid_decoded)
-        reshape_decoded = decoder_reshape(up_decoded)
-        deconv_1_decoded = decoder_deconv_1(reshape_decoded)
-        deconv_2_decoded = decoder_deconv_2(deconv_1_decoded)
-        x_decoded_relu = decoder_deconv_3_upsamp(deconv_2_decoded)
-        x_decoded_mean_squash = decoder_mean_squash(x_decoded_relu)
+        hid_decoded = self.decoder_hid(z)
+        up_decoded = self.decoder_upsample(hid_decoded)
+        reshape_decoded = self.decoder_reshape(up_decoded)
+        deconv_1_decoded = self.decoder_deconv_1(reshape_decoded)
+        deconv_2_decoded = self.decoder_deconv_2(deconv_1_decoded)
+        x_decoded_relu = self.decoder_deconv_3_upsamp(deconv_2_decoded)
+        x_decoded_mean_squash = self.decoder_mean_squash(x_decoded_relu)
 
         return x_decoded_mean_squash
 

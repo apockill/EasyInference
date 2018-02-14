@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 
-def visualize_grid(generator, output_shape, num_cols=15, batch_size=600, save_to=None):
+def visualize_grid(generator, output_shape, num_cols=15, batch_size=1, save_to=None):
     # display a 2D manifold of the digits
     figure = np.zeros((output_shape[0] * num_cols,
                        output_shape[1] * num_cols,
@@ -23,7 +23,7 @@ def visualize_grid(generator, output_shape, num_cols=15, batch_size=600, save_to
             z_sample = np.array([[xi, yi]])
             z_sample = np.tile(z_sample, batch_size).reshape(batch_size, 2)
             x_decoded = generator.predict(z_sample, batch_size=batch_size)
-
+            print(x_decoded)
             # Reshape the image and convert it from BGR to RGB
             img = x_decoded[0].reshape(output_shape)
             img = img[..., ::-1]
@@ -41,10 +41,10 @@ def visualize_grid(generator, output_shape, num_cols=15, batch_size=600, save_to
         cv2.imwrite(save_to, figure)
 
 if __name__ == "__main__":
-
-    for path in Path("./old").resolve().glob("Decoder_*.h5"):
+    path = "../..//model_files/variational-autoencoder/unity-forage-and-avoid/"
+    for path in Path(path).resolve().glob("Decoder_*ld_2*.h5"):
         pic_path = path.parent / path.name.replace(".h5", ".png")
 
-        if not pic_path.exists():
+        if True or not pic_path.exists():
             model = keras.models.load_model(str(path))
             visualize_grid(model, (32, 32, 3), save_to=str(pic_path))
