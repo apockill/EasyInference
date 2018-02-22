@@ -50,7 +50,4 @@ class VariationalDecoder:
         postprocessed = decoded * 255
         postprocessed = postprocessed.astype(dtype=np.uint8)
 
-        # decoded = [d.reshape(self.output_shape) for d in decoded]
-        # print("s2", np.asarray(decoded).shape)
-        # postprocessed = postprocessed[0].reshape(self.output_shape)
         return postprocessed

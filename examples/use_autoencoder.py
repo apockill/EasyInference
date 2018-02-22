@@ -30,7 +30,7 @@ if __name__ == "__main__":
         # Decode the image
         img_p = decoder.predict(pred)
 
-        # Show the encoded and decoded images
+        # Show the encoded and decoded image
         cv2.imshow("INPUT", img)
         cv2.imshow("OUTPUT", img_p[0])
 

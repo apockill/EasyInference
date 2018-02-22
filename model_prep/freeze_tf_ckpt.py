@@ -1,4 +1,6 @@
-import os, argparse
+import os
+import argparse
+from pathlib import Path
 
 import tensorflow as tf
 
@@ -8,25 +10,26 @@ import tensorflow as tf
 dir = os.path.dirname(os.path.realpath(__file__))
 
 
-def freeze_graph(input_checkpoint, output_node_names):
+def save_graph_summary(session, log_dir):
+    train_writer = tf.summary.FileWriter(log_dir)
+    train_writer.add_graph(session.graph)
+
+
+def freeze_graph(model_path, output_node_names):
     """Extract the sub graph defined by the output nodes and convert
     all its variables into constant
     Args:
-        model_dir: the root folder containing the checkpoint state file
+        model_path: The path to the basename of the model.
+        Example: model_files/model where inside model_files there is
+            model.data-00000-of-000001
+            model.index
+            model.meta
         output_node_names: a string, containing all the output node's names,
                             comma separated
     """
-    if not tf.gfile.Exists(input_checkpoint):
-        raise AssertionError(
-            "Export checkpoint doesn't exists. Please specify an export "
-            "file: %s" % input_checkpoint)
-
-    if not output_node_names:
-        print("You need to supply the name of a node to --output_node_names.")
-        return -1
 
     # We precise the file fullname of our freezed graph
-    absolute_model_dir = "/".join(input_checkpoint.split('/')[:-1])
+    absolute_model_dir = "/".join(model_path.split('/')[:-1])
     output_graph = absolute_model_dir + "/frozen_model.pb"
 
     # We clear devices to allow TensorFlow to control on which device it will load operations
@@ -35,10 +38,21 @@ def freeze_graph(input_checkpoint, output_node_names):
     # We start a session using a temporary fresh Graph
     with tf.Session(graph=tf.Graph()) as sess:
         # We import the meta graph in the current default Graph
-        saver = tf.train.import_meta_graph(input_checkpoint + '.meta', clear_devices=clear_devices)
+        saver = tf.train.import_meta_graph(model_path + '.meta', clear_devices=clear_devices)
 
         # We restore the weights
-        saver.restore(sess, input_checkpoint)
+        saver.restore(sess, model_path)
+
+        # Save a graph summary for easy tensorboard viewing
+        save_graph_summary(sess, str(Path(model_path).parent))
+
+        # Print information about the loaded model
+        ops = [o.name for o in tf.get_default_graph().get_operations()]
+        print("All Operations: \n", ops)
+
+        if not output_node_names:
+            print("You need to supply the name of a node to --output_node_names.")
+            return -1
 
         # We use a built-in TF helper to export variables to constants
         output_graph_def = tf.graph_util.convert_variables_to_constants(
@@ -57,7 +71,7 @@ def freeze_graph(input_checkpoint, output_node_names):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_path", type=str, default="", help="Model folder to export")
+    parser.add_argument("--model_path", type=str, required=True, help="Model folder to export")
     parser.add_argument("--output_node_names", type=str, default="",
                         help="The name of the output nodes, comma separated.")
     args = parser.parse_args()
