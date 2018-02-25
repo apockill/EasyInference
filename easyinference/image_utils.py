@@ -72,9 +72,9 @@ def resize_and_crop(img, new_w, new_h):
 
     x1 = delta_w // 2
     y1 = delta_h // 2
-    x2 = cur_w - x1 + (delta_w - 2 * x1)
-    y2 = cur_h - y1 - (delta_h - 2 * y1)
-    print("remainder x2", delta_w - 2 * x1, "y2", delta_h - 2 * y1)
+
+    x2 = cur_w - (delta_w - x1)
+    y2 = cur_h - (delta_h - y1)
 
     cropped = img[y1:y2,
                   x1:x2, :]
