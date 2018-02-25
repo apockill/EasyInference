@@ -13,7 +13,7 @@ All credit goes to them. This is simply a wrapper around the trained model.
 """
 
 
-class ImageSegmenter:
+class DeeplabImageSegmenter:
 
     def __init__(self, model_bytes, labels_unparsed):
         # Parse everything
@@ -35,7 +35,7 @@ class ImageSegmenter:
         model_path = Path(model_path).resolve()
         model_bytes = loading.load_tf_model(str(model_path))
         label_str = open(label_path, 'r').read()
-        return ImageSegmenter(model_bytes, label_str)
+        return DeeplabImageSegmenter(model_bytes, label_str)
 
     def predict(self, img_bgr):
         feed = {self.input_node: img_bgr}

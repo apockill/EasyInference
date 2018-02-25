@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 from easyinference import image_utils
-from easyinference.monodepth_prediction import MonoDepthPredictor
+from easyinference.models import MonoDepthPredictor
 
 
 if __name__ == "__main__":
