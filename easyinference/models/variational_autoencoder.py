@@ -4,12 +4,14 @@ from tensorflow.contrib import keras
 import cv2
 import numpy as np
 
+from easyinference.models import BaseModel
+
 """
 This code is for easily running the variational autoencoder models that I make
 """
 
 
-class VariationalEncoder:
+class VariationalEncoder(BaseModel):
     def __init__(self, keras_model):
         self.model = keras_model
         print(self.model.layers[0].input_shape)
@@ -29,7 +31,7 @@ class VariationalEncoder:
         return pred
 
 
-class VariationalDecoder:
+class VariationalDecoder(BaseModel):
     def __init__(self, keras_model):
         self.model = keras_model
         self.output_shape = self.model.layers[-1].output_shape[1:]  # (h, w, c)
