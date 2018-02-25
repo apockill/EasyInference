@@ -1,12 +1,9 @@
 import json
 from pathlib import Path
 
-import cv2
 import numpy as np
-import tensorflow as tf
 
-import easyinference.loading as loading
-
+import easyinference.load_utils as loading
 
 """
 This code is for running the DeeplabV3 model. It is using the model trained from the following repository:
