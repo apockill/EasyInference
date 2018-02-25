@@ -66,18 +66,16 @@ def resize_and_crop(img, new_w, new_h):
     """
     img = resize_to_fit(img, new_w, new_h, fit_within=False)
 
-    cv2.imshow('blah', img)
-
     cur_h, cur_w, _ = img.shape
     delta_w = cur_w - new_w
     delta_h = cur_h - new_h
 
     x1 = delta_w // 2
     y1 = delta_h // 2
-    x2 = cur_w - x1
-    y2 = cur_h - y1
+    x2 = cur_w - x1 + (delta_w - 2 * x1)
+    y2 = cur_h - y1 - (delta_h - 2 * y1)
+    print("remainder x2", delta_w - 2 * x1, "y2", delta_h - 2 * y1)
 
-    print(x1, y1, x2, y2)
     cropped = img[y1:y2,
                   x1:x2, :]
     return cropped

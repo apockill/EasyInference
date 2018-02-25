@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 import easyinference.load_utils as loading
-
+from easyinference.image_utils import resize_and_crop
 """
 This code is for running the DeeplabV3 model. It is using the model trained from the following repository:
 https://github.com/DrSleep/tensorflow-deeplab-resnet
@@ -32,10 +32,26 @@ class DepthPredictor:
         return DepthPredictor(model_bytes)
 
     def predict(self, imgs_bgr):
-        preprocessed = [cv2.resize(img, (512, 256)) for img in imgs_bgr]
+        print(imgs_bgr[0].shape)
+        preprocessed = [preprocess(img) for img in imgs_bgr]
         print(preprocessed[0].shape)
         feed = {self.input_node: preprocessed}
         out = self.session.run(self.output_node, feed)
 
-        out = [np.squeeze(d) for d in out]
+        out = [DepthMap(np.squeeze(d)) for d in out]
         return out
+
+def preprocess(img_bgr):
+    img = resize_and_crop(img_bgr, 512, 256)
+    img = img.astype(np.float32) / 255
+    return img
+
+class DepthMap:
+    def __init__(self, depth):
+        self.depth = depth
+
+    def normalized(self):
+        """ Returns a 0-255 openCV ready-to-save image """
+        return cv2.normalize(self.depth, None, alpha=0, beta=255,
+                             norm_type=cv2.NORM_MINMAX,
+                             dtype=cv2.CV_8U)
