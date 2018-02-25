@@ -39,7 +39,6 @@ def _preprocess(img_bgr):
     img_bgr = resize_and_pad(img_bgr,
                              FCRNDepthPredictor.WIDTH,
                              FCRNDepthPredictor.HEIGHT)
-    cv2.imshow("w", img_bgr)
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
 
     return img_rgb
