@@ -1,11 +1,12 @@
 from pathlib import Path
+from typing import List
 
 import numpy as np
 
 import easyinference.load_utils as loading
 from easyinference.image_utils import resize_and_crop
 from easyinference.models import BaseModel
-from easyinference.models.predictions import DepthMap
+from easyinference.predictions import DepthMap
 
 """
 This code is for running the monodepth model. 
@@ -16,8 +17,8 @@ All credit goes to them. This is simply a wrapper around the trained model.
 
 
 class MonoDepthPredictor(BaseModel):
-    WIDTH=512
-    HEIGHT=256
+    WIDTH = 512
+    HEIGHT = 256
 
     def __init__(self, model_bytes):
         # Parse everything
@@ -35,7 +36,7 @@ class MonoDepthPredictor(BaseModel):
         model_bytes = loading.load_tf_model(str(model_path))
         return MonoDepthPredictor(model_bytes)
 
-    def predict(self, img_bgr):
+    def predict(self, img_bgr: List[np.ndarray]) -> List[DepthMap]:
         preprocessed = _preprocess(img_bgr)
 
         feed = {self.input_node: preprocessed}

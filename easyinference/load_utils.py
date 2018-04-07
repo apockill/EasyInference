@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 def load_tf_model(model_path):
     # Load a (frozen) Tensorflow model into memory.
     with tf.gfile.GFile(model_path, 'rb') as fid:
@@ -13,10 +14,9 @@ def parse_tf_model(model_bytes):
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(model_bytes)
 
-    # Load the model as a graph
+    # Load the model definition
     detection_graph = tf.Graph()
     with detection_graph.as_default():
-        tf.import_graph_def(graph_def, name='')
         tf.import_graph_def(graph_def, name='')
 
     # Create a session for later use

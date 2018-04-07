@@ -53,7 +53,6 @@ class Dataset:
 
             if img.shape != (self.height, self.width, self.channels):
                 img = cv2.resize(img, (self.width, self.height))
-                # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             if i < num_test:
                 x_test.append(img)

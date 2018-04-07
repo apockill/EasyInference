@@ -38,11 +38,11 @@ class CustomVariationalLossLayer(Layer):
 
 
 class VariationalAutoencoder:
-    def __init__(self, img_resolution, channels, epochs=1000):
+    def __init__(self, img_resolution, epochs=1000):
         # Network Parameters
         self.height = img_resolution[1]
         self.width = img_resolution[0]
-        self.channels = channels
+        self.channels = 3
         self.latent_dim = 2
         self.intermediate_dim = 128
         self.epsilon_std = 1.0

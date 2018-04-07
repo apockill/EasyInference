@@ -5,7 +5,8 @@ from model import VariationalAutoencoder
 from dataset import Dataset
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="This script will train an autoencoder and save the trained encoder"
+    parser = argparse.ArgumentParser(
+        description="This script will train an autoencoder and save the trained encoder"
                                                  "and decoder to a specified directory.")
     parser.add_argument('-i', '--image-dir', type=str, required=True,
                         help='The directory where the images for training are saved')
@@ -17,14 +18,18 @@ if __name__ == "__main__":
                         help='The size of the bottleneck vector in the autonecoder')
     parser.add_argument('--epochs', type=int, default=1000,
                         help='How long you want the training to go on for. Usually > 1000')
+
     args = parser.parse_args()
 
     # Load the dataset
-    dataset = Dataset(args.image_dir, 0.2, load_resolution=args.resolution)
+    dataset = Dataset(args.image_dir, 0.2,
+                      load_resolution=args.resolution[::-1])
+
+
     x_train, x_test = dataset.load()
 
     # Train the model
-    vae = VariationalAutoencoder(args.resolution, 3, args.epochs)
+    vae = VariationalAutoencoder(args.resolution, args.epochs)
     vae.latent_dim = args.latent_dim
     encoder, decoder = vae.train(x_train, x_test)
 

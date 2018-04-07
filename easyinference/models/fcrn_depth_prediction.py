@@ -1,11 +1,12 @@
+from typing import List
 
-import numpy as np
 import cv2
+import numpy as np
 
 from easyinference import load_utils
-from easyinference.models import BaseModel
 from easyinference.image_utils import resize_and_pad
-from easyinference.models.predictions import DepthMap
+from easyinference.models import BaseModel
+from easyinference.predictions import DepthMap
 
 
 class FCRNDepthPredictor(BaseModel):
@@ -23,7 +24,7 @@ class FCRNDepthPredictor(BaseModel):
         model = load_utils.load_tf_model(model_path)
         return FCRNDepthPredictor(model)
 
-    def predict(self, imgs_bgr):
+    def predict(self, imgs_bgr: List[np.ndarray]) -> List[DepthMap]:
         """
         This model only accepts color images of resolution (304, 228)
         :param imgs_bgr: A color BGR image

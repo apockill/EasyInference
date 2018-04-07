@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
         # Encode the image
         pred = encoder.predict([img])
-
+        print(pred)
         # Decode the image
         img_p = decoder.predict(pred)
 
