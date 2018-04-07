@@ -53,11 +53,15 @@ class ObjectDetector(BaseModel):
                 score = all_scores[image_index][detection_index]
                 if score < self.confidence_thresh: continue
 
+                # Convert the box to rect format
                 box = all_boxes[image_index][detection_index]
-                # box = box * [w, h, w, h]
+                rect = np.array([box[1], box[0], box[3], box[2]])
+                rect = rect * [w, h, w, h]
+                rect = np.round(rect, 0).astype(int)
+
                 class_id = int(all_classes[image_index][detection_index])
                 name = self.label_map[str(class_id)]
-                detections.append(Detection(name, box, score))
+                detections.append(Detection(name, rect, score))
             all_detections.append(detections)
         return all_detections
 
