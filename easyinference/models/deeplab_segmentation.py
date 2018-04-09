@@ -5,7 +5,6 @@ import numpy as np
 
 import easyinference.load_utils as loading
 from easyinference.models import BaseModel
-from easyinference.predictions import Segmentation
 
 """
 This code is for running the DeeplabV3 model. It is using the model trained from the following repository:
@@ -40,10 +39,42 @@ class DeeplabImageSegmenter(BaseModel):
             label_str = f.read()
         return DeeplabImageSegmenter(model_bytes, label_str)
 
-    def predict(self, img_bgr: np.ndarray) -> Segmentation:
+    def predict(self, img_bgr: np.ndarray) -> 'Segmentation':
         feed = {self.input_node: img_bgr}
         out = self.session.run(self.output_node, feed)[0]
         out = np.squeeze(out)
         return Segmentation(out, self.label_map)
 
 
+class Segmentation:
+    """ This is the output prediction from ImageSegmenter """
+    def __init__(self, segmentation, label_map):
+        """
+        :param segmentation: (img_height, img_width) shape array, where each number corresponds to a key in the
+        label_map dictionary.
+        :param label_map:
+        """
+        self.label_map = label_map
+        self.seg = segmentation
+
+    @property
+    def colored(self):
+        """Decode batch of segmentation masks.
+
+        Args:
+          mask: result of easyinference after taking argmax.
+          num_images: number of images to decode from the batch.
+          num_classes: number of classes to predict (including background).
+
+        Returns:
+          A batch with num_images RGB images of the same size as the input.
+        """
+        new = np.zeros((*self.seg.shape[:2], 3), dtype=np.uint8)
+
+        for label_type in self.label_map.keys():
+            label_int = int(label_type)
+            replace_with = np.array(self.label_map[label_type]["color"], dtype=np.uint8)
+            cells_to_replace = self.seg == label_int
+            new[cells_to_replace] = replace_with
+
+        return new
