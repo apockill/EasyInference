@@ -9,8 +9,7 @@ setup(
     version='0.1',
     description='This is a helper library for me to write simple easyinference wrappers over pretrained TF models, that '
                 'require none of the original model definition code. ',
-    packages=['easyinference',
-              'pyserial'],
-    install_requires=[],
+    packages=['easyinference'],
+    install_requires=["tensorflow-gpu"],
     zip_safe=False
 )

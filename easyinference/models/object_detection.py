@@ -71,3 +71,6 @@ class Detection:
         self.name = name
         self.rect = rect
         self.confidence = confidence
+
+    def __repr__(self):
+        return str(self.__dict__)
