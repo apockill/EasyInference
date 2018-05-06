@@ -29,8 +29,9 @@ def freeze_graph(model_path, output_node_names):
     """
 
     # We precise the file fullname of our freezed graph
-    absolute_model_dir = "/".join(model_path.split('/')[:-1])
-    output_graph = absolute_model_dir + "/frozen_model.pb"
+    absolute_model_dir = Path(model_path).parent
+    output_graph_path = absolute_model_dir / "frozen_model.pb"
+    meta_file = list(Path(absolute_model_dir).glob("*.meta"))[0]
 
     # We clear devices to allow TensorFlow to control on which device it will load operations
     clear_devices = True
@@ -38,7 +39,7 @@ def freeze_graph(model_path, output_node_names):
     # We start a session using a temporary fresh Graph
     with tf.Session(graph=tf.Graph()) as sess:
         # We import the meta graph in the current default Graph
-        saver = tf.train.import_meta_graph(model_path + '.meta', clear_devices=clear_devices)
+        saver = tf.train.import_meta_graph(str(meta_file), clear_devices=clear_devices)
 
         # We restore the weights
         saver.restore(sess, model_path)
@@ -62,7 +63,7 @@ def freeze_graph(model_path, output_node_names):
         )
 
         # Finally we serialize and dump the output graph to the filesystem
-        with tf.gfile.GFile(output_graph, "wb") as f:
+        with tf.gfile.GFile(str(output_graph_path), "wb") as f:
             f.write(output_graph_def.SerializeToString())
         print("%d ops in the final graph." % len(output_graph_def.node))
 
