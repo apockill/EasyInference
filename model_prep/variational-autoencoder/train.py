@@ -2,12 +2,12 @@ import argparse
 from pathlib import Path
 
 from model import VariationalAutoencoder
-from dataset import Dataset
+from model_prep.dataset_loaders.dataset import Dataset
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="This script will train an autoencoder and save the trained encoder"
-                                                 "and decoder to a specified directory.")
+                    "and decoder to a specified directory.")
     parser.add_argument('-i', '--image-dir', type=str, required=True,
                         help='The directory where the images for training are saved')
     parser.add_argument('-d', '--output-dir', type=str, default="./models/",
@@ -25,7 +25,6 @@ if __name__ == "__main__":
     dataset = Dataset(args.image_dir, 0.2,
                       load_resolution=args.resolution[::-1])
 
-
     x_train, x_test = dataset.load()
 
     # Train the model
@@ -35,6 +34,7 @@ if __name__ == "__main__":
 
     # Save the encoder and decoder
     Path(args.output_dir).mkdir(exist_ok=True)
-    name = "_dims_{}x{}_ld_{}_e_{}.h5".format(vae.width, vae.height, vae.latent_dim, vae.epochs)
+    name = "_dims_{}x{}_ld_{}_e_{}.h5".format(vae.width, vae.height,
+                                              vae.latent_dim, vae.epochs)
     encoder.save(str(Path(args.output_dir) / ("Encoder" + name)))
     decoder.save(str(Path(args.output_dir) / ("Decoder" + name)))

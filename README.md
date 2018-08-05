@@ -12,3 +12,5 @@ The following is a list of public repositories that I have made wrappers for.
 [MonoDepth Prediction](https://github.com/mrharicot/monodepth)
 
 [FCRN Depth Prediction](https://github.com/iro-cp/FCRN-DepthPrediction)
+
+[Keras Infogan](https://github.com/EmilienDupont/infogan)
