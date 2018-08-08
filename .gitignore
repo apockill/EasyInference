@@ -3,3 +3,5 @@
 
 # Dolphin settings
 .directory
+
+__pycache__/*
