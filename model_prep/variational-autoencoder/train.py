@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 from model import VariationalAutoencoder
-from model_prep.dataset_loaders.dataset import Dataset
+from easyinference.train_utils.image_dataset import Dataset
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

@@ -10,8 +10,9 @@ import numpy as np
 
 
 class Dataset:
-    def __init__(self, img_dir, fraction_test_set, load_resolution=None,
-                 max_size=None, shuffle=False):
+    def __init__(self, img_dir, fraction_test_set, val_range=(0, 255),
+                 dtype=np.uint8, load_resolution=None, max_size=None,
+                 shuffle=False):
         """
         :param img_dir: A directory full of *.png images
         :param fraction_test_set: 0-1, the fraction of images to be put in the
@@ -24,7 +25,8 @@ class Dataset:
 
         self.img_dir = img_dir
         self.fraction_test = fraction_test_set
-
+        self.dtype = dtype
+        self.val_range = val_range
         self.img_paths = list(Path(self.img_dir).glob("*.png")) + \
                          list(Path(self.img_dir).glob("*.jpg"))
 
@@ -93,11 +95,12 @@ class Dataset:
             else:
                 x_train.append(img)
 
+
         return np.asarray(x_train), np.asarray(x_test)
 
     def _load_and_preprocess(self, img_path):
         """Load an image and preprocess it according to spec"""
-        img = cv2.imread(str(img_path))
+        img: np.ndarray = cv2.imread(str(img_path))
 
         # Adjust the image resolution
         if img.shape[:2] != (self.height, self.width):
@@ -110,6 +113,15 @@ class Dataset:
             elif img.shape[2] == 1:
                 img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
+        # Adjust the image to be between two specific values
+        img = img.astype(dtype=np.float64)  # Temporarily turn to float
+        img /= 255
+        img = img * (self.val_range[1] - self.val_range[0])
+        img += self.val_range[0]
+        img = np.clip(img, *self.val_range)
+
+        # Adjust the images type
+        img = img.astype(self.dtype)
         return img
 
     def _worker(self, work_queue, img_queue):
