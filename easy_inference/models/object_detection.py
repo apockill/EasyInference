@@ -4,8 +4,8 @@ from typing import List
 import cv2
 import numpy as np
 
-import easyinference.load_utils as loading
-from easyinference.models import BaseModel
+import easy_inference.load_utils as loading
+from easy_inference.models import BaseModel
 
 
 class ObjectDetector(BaseModel):

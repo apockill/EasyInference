@@ -3,10 +3,10 @@ from typing import List
 import cv2
 import numpy as np
 
-from easyinference import load_utils
-from easyinference.image_utils import resize_and_pad
-from easyinference.models import BaseModel
-from easyinference.predictions import DepthMap
+from easy_inference import load_utils
+from easy_inference.image_utils import resize_and_pad
+from easy_inference.models import BaseModel
+from easy_inference.predictions import DepthMap
 
 
 class FCRNDepthPredictor(BaseModel):

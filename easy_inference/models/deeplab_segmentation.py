@@ -3,8 +3,8 @@ from pathlib import Path
 
 import numpy as np
 
-import easyinference.load_utils as loading
-from easyinference.models import BaseModel
+import easy_inference.load_utils as loading
+from easy_inference.models import BaseModel
 
 """
 This code is for running the DeeplabV3 model. It is using the model trained from the following repository:

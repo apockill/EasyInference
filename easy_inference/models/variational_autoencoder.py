@@ -5,7 +5,7 @@ import cv2
 import tensorflow
 import numpy as np
 
-from easyinference.models import BaseModel
+from easy_inference.models import BaseModel
 
 """
 This code is for easily running the variational autoencoder models that I make

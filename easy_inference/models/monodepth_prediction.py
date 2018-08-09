@@ -3,10 +3,10 @@ from typing import List
 
 import numpy as np
 
-import easyinference.load_utils as loading
-from easyinference.image_utils import resize_and_crop
-from easyinference.models import BaseModel
-from easyinference.predictions import DepthMap
+import easy_inference.load_utils as loading
+from easy_inference.image_utils import resize_and_crop
+from easy_inference.models import BaseModel
+from easy_inference.predictions import DepthMap
 
 """
 This code is for running the monodepth model. 
