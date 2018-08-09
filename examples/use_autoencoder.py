@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 import cv2
 
-from easyinference.models import VariationalDecoder, VariationalEncoder
+from easy_inference.models import VariationalDecoder, VariationalEncoder
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="This is an example how how to use the variational autoencoder.")

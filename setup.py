@@ -1,15 +1,15 @@
 from setuptools import setup
 
 
-scripts = ["./model_prep/freeze_tf_ckpt.py"]
+scripts = []
 
 setup(
-    name='easyinference',
+    name='easy_inference',
     scripts=scripts,
     version='0.1',
-    description='This is a helper library for me to write simple easyinference wrappers over pretrained TF models, that '
+    description='This is a helper library for me to write simple easy_inference wrappers over pretrained TF models, that '
                 'require none of the original model definition code. ',
-    packages=['easyinference'],
+    packages=['easy_inference'],
     install_requires=["tensorflow-gpu",
                       "plotly",
                       "h5py"],

@@ -4,8 +4,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from easyinference import image_utils
-from easyinference.models import MonoDepthPredictor, FCRNDepthPredictor
+from easy_inference import image_utils
+from easy_inference.models import MonoDepthPredictor, FCRNDepthPredictor
 
 
 PREDICTORS = {"monodepth": MonoDepthPredictor, "fcrn": FCRNDepthPredictor}

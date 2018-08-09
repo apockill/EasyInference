@@ -4,8 +4,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from easyinference import image_utils
-from easyinference.models import ObjectDetector
+from easy_inference import image_utils
+from easy_inference.models import ObjectDetector
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="This is an example how how to use "
