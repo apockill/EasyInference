@@ -95,7 +95,6 @@ class Dataset:
             else:
                 x_train.append(img)
 
-
         return np.asarray(x_train), np.asarray(x_test)
 
     def _load_and_preprocess(self, img_path):
@@ -114,7 +113,7 @@ class Dataset:
                 img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
         # Adjust the image to be between two specific values
-        img = img.astype(dtype=np.float64)  # Temporarily turn to float
+        img = img.astype(dtype=np.float32)  # Temporarily turn to float
         img /= 255
         img = img * (self.val_range[1] - self.val_range[0])
         img += self.val_range[0]
