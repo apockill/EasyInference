@@ -22,8 +22,8 @@ def resize_to_fit(img, max_w, max_h, fit_within=True):
         scale_factor = max_h / cur_h if pred_h < max_h else max_w / cur_w
 
 
-    new_w = int(cur_w * scale_factor)
-    new_h = int(cur_h * scale_factor)
+    new_w = int(round(cur_w * scale_factor, 0))
+    new_h = int(round(cur_h * scale_factor, 0))
 
     return cv2.resize(img, (new_w, new_h))
 
