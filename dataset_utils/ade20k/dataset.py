@@ -21,7 +21,8 @@ class DataObject:
             else:
                 self.image_file = file
 
-        assert all([val is not None for val in [self.image_file, self.segment_file, self.text_file]])
+        assert all([val is not None for val in
+                    [self.image_file, self.segment_file, self.text_file]])
 
     def __repr__(self):
         return str(self.file_id)
@@ -88,6 +89,7 @@ class Dataset:
                   groupby(all, key=lambda file_name: get_id(file_name))]
         groups = sorted(groups, key=lambda g: g.file_id)
         return groups
+
 
 if __name__ == "__main__":
     dataset = Dataset("./images/training/")

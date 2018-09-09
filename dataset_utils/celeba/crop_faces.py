@@ -20,9 +20,6 @@ def _worker(min_size, write_to, work_queue: Queue):
             if h < min_size and w < min_size:
                 continue
         frame = img.frame
-        if frame is None:
-            print("Skipping, corrupt image")
-            continue
 
         face = frame[img.rect[1]:img.rect[3],
                img.rect[0]:img.rect[2]]
@@ -41,7 +38,7 @@ def _worker(min_size, write_to, work_queue: Queue):
         cv2.imwrite(str(Path(write_to) / img.image_path.name), face)
 
 
-def crop_images(dataset, write_to, min_size=None, num_workers=10):
+def crop_images(dataset, write_to, min_size=None, num_workers=32):
     Path(write_to).mkdir(parents=True, exist_ok=True)
 
     # Create work to be done
