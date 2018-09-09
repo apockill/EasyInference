@@ -30,6 +30,7 @@ class Image:
     @property
     def frame(self):
         """Load the image as a numpy array"""
+        print("Loading", self.image_path)
         return cv2.imread(str(self.image_path))
 
     def copy_to(self, new_dir: Path):

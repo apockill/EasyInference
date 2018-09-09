@@ -19,8 +19,12 @@ def _worker(min_size, write_to, work_queue: Queue):
 
             if h < min_size and w < min_size:
                 continue
+        frame = img.frame
+        if frame is None:
+            print("Skipping, corrupt image")
+            continue
 
-        face = img.frame[img.rect[1]:img.rect[3],
+        face = frame[img.rect[1]:img.rect[3],
                img.rect[0]:img.rect[2]]
 
         if min_size is not None:
@@ -56,6 +60,7 @@ def crop_images(dataset, write_to, min_size=None, num_workers=10):
         worker.join()
 
     print("Finished processing!")
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
