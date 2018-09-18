@@ -5,3 +5,5 @@
 .directory
 
 __pycache__/*
+
+*.pb

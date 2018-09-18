@@ -5,10 +5,10 @@ import cv2
 import numpy as np
 
 import easy_inference.load_utils as loading
-from easy_inference.models import BaseModel
+from easy_inference.models import TensorflowBaseModel
 
 
-class ObjectDetector(BaseModel):
+class ObjectDetector(TensorflowBaseModel):
     def __init__(self, model_bytes, labels_unparsed, confidence_thresh=0.5):
         self.confidence_thresh = confidence_thresh
 
@@ -20,19 +20,6 @@ class ObjectDetector(BaseModel):
         self.boxes_node = self.graph.get_tensor_by_name('detection_boxes:0')
         self.scores_node = self.graph.get_tensor_by_name('detection_scores:0')
         self.classes_node = self.graph.get_tensor_by_name('detection_classes:0')
-
-    @staticmethod
-    def from_path(model_path, labels_path):
-        """
-        :param model_path: Path to the frozen detection model *.pb
-        :param labels_path: Path to the labels JSON with the following format:
-        {"1": "Person", "2": "Dog", "3": "Cat"}
-        :return:
-        """
-        model_bytes = loading.load_tf_model(model_path)
-        with open(labels_path, 'r') as f:
-            label_str = f.read()
-        return ObjectDetector(model_bytes, label_str)
 
     def predict(self, imgs_bgr: List[np.ndarray]) -> List[List['Detection']]:
         # Preprocess all of the images
