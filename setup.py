@@ -12,6 +12,7 @@ setup(
     packages=['easy_inference'],
     install_requires=["tensorflow-gpu",
                       "plotly",
-                      "h5py"],
+                      "h5py",
+                      "ujson"],
     zip_safe=False
 )
