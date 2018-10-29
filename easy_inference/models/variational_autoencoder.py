@@ -1,4 +1,4 @@
-from tensorflow.contrib import keras
+import keras
 from typing import List
 
 import cv2
@@ -22,19 +22,32 @@ class VariationalEncoder(BaseModel):
         return VariationalEncoder(keras.models.load_model(model_path))
 
     def predict(self, imgs_bgr: List[np.ndarray]) -> List[np.ndarray]:
-        preprocessed = [cv2.resize(img, (self.input_shape[1], self.input_shape[0]))
-                        for img in imgs_bgr]
+        preprocessed = [
+            self._preprocess(img)
+            for img in imgs_bgr]
+
         preprocessed = np.asarray(preprocessed, dtype=np.float32)
         preprocessed /= 255.
-
         pred = self.model.predict(preprocessed)
         return pred
 
+    def _preprocess(self, img):
+        img = cv2.resize(img, (self.input_shape[1], self.input_shape[0]))
+
+        # OpenCV removes an axis from images when dealing with grayscale.
+        # Add it back here
+        if len(img.shape) == 2:
+            img = np.expand_dims(img, axis=-1)
+
+        return img
+
 
 class VariationalDecoder(BaseModel):
+
     def __init__(self, keras_model):
         self.model = keras_model
-        self.output_shape = self.model.layers[-1].output_shape[1:]  # (h, w, c)
+        self.output_shape = self.model.layers[-1].output_shape[
+                            1:]  # (h, w, c)
 
     @staticmethod
     def from_path(model_path):
