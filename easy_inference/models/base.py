@@ -21,5 +21,5 @@ class TensorflowBaseModel(BaseModel):
         if labels_path is not None:
             with open(labels_path, 'r') as f:
                 label_str = f.read()
-            return cls(model_bytes=model_bytes, labels_path=label_str)
+            return cls(model_bytes=model_bytes, labels_unparsed=label_str)
         return cls(model_bytes=model_bytes)
