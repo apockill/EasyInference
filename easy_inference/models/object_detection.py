@@ -10,10 +10,10 @@ from easy_inference.predictions import Detection
 
 
 class ObjectDetector(TensorflowBaseModel):
-    def __init__(self, model_bytes, labels_unparsed, confidence_thresh=0.5):
+    def __init__(self, model_bytes, labels, confidence_thresh=0.5):
         self.confidence_thresh = confidence_thresh
 
-        self.label_map = json.loads(labels_unparsed)
+        self.label_map = labels
         graph, self.session = loading.parse_tf_model(model_bytes)
 
         # Get relevant nodes from the graph

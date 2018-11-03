@@ -1,4 +1,5 @@
 import abc
+import json
 
 import easy_inference.load_utils as loading
 
@@ -15,11 +16,17 @@ class BaseModel(abc.ABC):
 
 class TensorflowBaseModel(BaseModel):
     @classmethod
-    def from_path(cls, model_path, labels_path=None):
+    def from_path(cls, model_path, labels_path=None, *args, **kwargs):
+        print(*args)
         model_bytes = loading.load_tf_model(model_path)
-
         if labels_path is not None:
             with open(labels_path, 'r') as f:
                 label_str = f.read()
-            return cls(model_bytes=model_bytes, labels_path=label_str)
-        return cls(model_bytes=model_bytes)
+                labels = json.loads(label_str)
+                labels = {int(key): value for key, value in labels.items()}
+
+            return cls(model_bytes=model_bytes,
+                       labels=labels,
+                       *args, **kwargs)
+        return cls(model_bytes=model_bytes,
+                   *args, **kwargs)

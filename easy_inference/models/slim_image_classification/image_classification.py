@@ -16,14 +16,14 @@ https://github.com/tensorflow/models/tree/master/research/slim
 
 
 class ImageClassifier(TensorflowBaseModel):
-    def __init__(self, model_bytes, labels_unparsed, model_name):
+    def __init__(self, model_bytes, labels, model_name):
         assert model_name in CLASSIFIERS, \
             "{model_name} is not a supported model! Supported models:" + \
             str(CLASSIFIERS.keys())
 
         self.model_params: ClassifierParams = CLASSIFIERS[model_name]
 
-        self.label_map = json.loads(labels_unparsed)
+        self.label_map = labels
         self.graph, self.session = loading.parse_tf_model(model_bytes)
 
         self.input_tensor = self.graph.get_tensor_by_name(
@@ -46,7 +46,7 @@ class ImageClassifier(TensorflowBaseModel):
         for out in outs:
             class_id = np.argmax(out)
             winning_name = self.label_map[int(class_id)]
-            confidence = out[class_id]
+
             scores = {self.label_map[i]: out[i]
                       for i in range(len(self.label_map))}
             assert scores[winning_name] == out[class_id]  # TODO: Remove line
