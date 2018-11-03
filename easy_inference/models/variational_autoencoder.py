@@ -19,7 +19,7 @@ class VariationalEncoder(BaseModel):
 
     @staticmethod
     def from_path(model_path):
-        return VariationalEncoder(keras.models.load_model(model_path))
+        return VariationalEncoder(keras.models.load_model(str(model_path)))
 
     def predict(self, imgs_bgr: List[np.ndarray]) -> List[np.ndarray]:
         preprocessed = [
@@ -51,7 +51,7 @@ class VariationalDecoder(BaseModel):
 
     @staticmethod
     def from_path(model_path):
-        return VariationalDecoder(keras.models.load_model(model_path))
+        return VariationalDecoder(keras.models.load_model(str(model_path)))
 
     def predict(self, latent_spaces: List[np.ndarray]) -> List[np.ndarray]:
         """

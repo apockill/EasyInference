@@ -17,15 +17,14 @@ class StarGanGenerator(TensorflowBaseModel):
         self.cat_input = self.graph.get_tensor_by_name('category_input:0')
         self.img_input = self.graph.get_tensor_by_name(
             'FunctionBufferingResourceGetNext:0')
-        self.output_node = self.graph.get_tensor_by_name('generator/Tanh:0')
+        self.output_tensor = self.graph.get_tensor_by_name('generator/Tanh:0')
 
     def predict(self, imgs_bgr: List[np.ndarray], categories: List[float]) \
             -> List[np.ndarray]:
         processed = [self.preprocess(img) for img in imgs_bgr]
-        print("Categories", np.array(categories).shape)
         feed = {self.img_input: processed,
                 self.cat_input: np.array(categories)}
-        output = self.session.run(self.output_node, feed_dict=feed)[0]
+        output = self.session.run(self.output_tensor, feed_dict=feed)[0]
 
         output = (output + 1) * 127.5
         output = output.astype(np.uint8)

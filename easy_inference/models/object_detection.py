@@ -6,6 +6,7 @@ import numpy as np
 
 import easy_inference.load_utils as loading
 from easy_inference.models import TensorflowBaseModel
+from easy_inference.predictions import Detection
 
 
 class ObjectDetector(TensorflowBaseModel):
@@ -13,21 +14,22 @@ class ObjectDetector(TensorflowBaseModel):
         self.confidence_thresh = confidence_thresh
 
         self.label_map = json.loads(labels_unparsed)
-        self.graph, self.session = loading.parse_tf_model(model_bytes)
+        graph, self.session = loading.parse_tf_model(model_bytes)
 
         # Get relevant nodes from the graph
-        self.input_node = self.graph.get_tensor_by_name('image_tensor:0')
-        self.boxes_node = self.graph.get_tensor_by_name('detection_boxes:0')
-        self.scores_node = self.graph.get_tensor_by_name('detection_scores:0')
-        self.classes_node = self.graph.get_tensor_by_name('detection_classes:0')
+        self.input_tensor = graph.get_tensor_by_name('image_tensor:0')
+        self.boxes_tensor = graph.get_tensor_by_name('detection_boxes:0')
+        self.scores_tensor = graph.get_tensor_by_name('detection_scores:0')
+        self.classes_tensor = graph.get_tensor_by_name('detection_classes:0')
 
     def predict(self, imgs_bgr: List[np.ndarray]) -> List[List['Detection']]:
         # Preprocess all of the images
         imgs_rgb = [cv2.cvtColor(img, cv2.COLOR_BGR2RGB) for img in imgs_bgr]
 
         # Run inference on all of the images
-        get_outputs = [self.boxes_node, self.scores_node, self.classes_node]
-        feed = {self.input_node: imgs_rgb}
+        get_outputs = [self.boxes_tensor, self.scores_tensor,
+                       self.classes_tensor]
+        feed = {self.input_tensor: imgs_rgb}
         all_outputs = self.session.run(get_outputs, feed_dict=feed)
         all_boxes, all_scores, all_classes = all_outputs
 
@@ -53,11 +55,3 @@ class ObjectDetector(TensorflowBaseModel):
         return all_detections
 
 
-class Detection:
-    def __init__(self, name, rect, confidence):
-        self.name = name
-        self.rect = rect
-        self.confidence = confidence
-
-    def __repr__(self):
-        return str(self.__dict__)
