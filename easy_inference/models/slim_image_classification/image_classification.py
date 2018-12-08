@@ -3,9 +3,9 @@ import json
 
 import numpy as np
 
-import easy_inference.load_utils as loading
-from easy_inference.models.base import TensorflowBaseModel
-from easy_inference.predictions import Classification
+import easy_inference.model_loading as loading
+from easy_inference.models.base_class import TensorflowBaseModel
+from easy_inference.labels import Classification
 from .preprocessing import CLASSIFIERS, ClassifierParams
 
 """

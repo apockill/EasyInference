@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 import cv2
 
-import easy_inference.load_utils as loading
+import easy_inference.model_loading as loading
 from easy_inference.models import TensorflowBaseModel
 
 

@@ -4,9 +4,9 @@ from typing import List
 import cv2
 import numpy as np
 
-import easy_inference.load_utils as loading
+import easy_inference.model_loading as loading
 from easy_inference.models import TensorflowBaseModel
-from easy_inference.predictions import Detection
+from easy_inference.labels import Detection
 
 
 class ObjectDetector(TensorflowBaseModel):

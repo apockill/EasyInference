@@ -3,10 +3,10 @@ from typing import List
 import cv2
 import numpy as np
 
-from easy_inference import load_utils
+from easy_inference import model_loading
 from easy_inference.image_utils import resize_and_pad
 from easy_inference.models import BaseModel
-from easy_inference.predictions import DepthMap
+from easy_inference.labels import DepthMap
 
 
 class FCRNDepthPredictor(BaseModel):
@@ -14,14 +14,14 @@ class FCRNDepthPredictor(BaseModel):
     HEIGHT = 228
 
     def __init__(self, model_bytes):
-        self.graph, self.session = load_utils.parse_tf_model(model_bytes)
+        self.graph, self.session = model_loading.parse_tf_model(model_bytes)
 
         self.input_node = self.graph.get_tensor_by_name("Placeholder:0")
         self.output_node = self.graph.get_tensor_by_name("ConvPred/ConvPred:0")
 
     @staticmethod
     def from_path(model_path):
-        model = load_utils.load_tf_model(model_path)
+        model = model_loading.load_tf_model(model_path)
         return FCRNDepthPredictor(model)
 
     def predict(self, imgs_bgr: List[np.ndarray]) -> List[DepthMap]:

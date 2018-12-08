@@ -1,7 +1,7 @@
 import abc
 import json
 
-import easy_inference.load_utils as loading
+import easy_inference.model_loading as loading
 
 
 class BaseModel(abc.ABC):
