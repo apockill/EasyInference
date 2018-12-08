@@ -16,5 +16,6 @@ setup(
                       "plotly",
                       "h5py",
                       "ujson"],
+    include_package_data=True,
     zip_safe=False
 )
