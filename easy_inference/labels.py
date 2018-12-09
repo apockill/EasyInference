@@ -1,3 +1,6 @@
+from typing import List
+import random
+
 import cv2
 import numpy as np
 
@@ -24,6 +27,14 @@ class Detection:
         self.name = name
         self.rect = rect
         self.confidence = confidence
+
+    @property
+    def display_color(self) -> List[int]:
+        """Return a color that is unique for this detections name"""
+        rand = random.Random(self.name)
+        return [rand.randint(0, 255),
+                rand.randint(0, 255),
+                rand.randint(0, 255)]
 
     def __repr__(self):
         return str(self.__dict__)
