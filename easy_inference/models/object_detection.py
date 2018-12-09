@@ -54,4 +54,6 @@ class ObjectDetector(TensorflowBaseModel):
             all_detections.append(detections)
         return all_detections
 
+    def close(self):
+        self.session.close()
 

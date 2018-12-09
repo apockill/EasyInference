@@ -7,7 +7,7 @@ scripts = []
 setup(
     name='easy_inference',
     scripts=scripts,
-    version='0.4',
+    version='0.5',
     description='This is a helper library for me to write simple easy_inference'
                 ' wrappers over pretrained TF models, that '
                 'require none of the original model definition code. ',
