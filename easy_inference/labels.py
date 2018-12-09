@@ -36,6 +36,19 @@ class Detection:
                 rand.randint(0, 255),
                 rand.randint(0, 255)]
 
+    @property
+    def width(self):
+        return self.rect[2] - self.rect[0]
+
+    @property
+    def height(self):
+        return self.rect[3] - self.rect[1]
+
+    @property
+    def area(self):
+        """Return the area of the bounding box"""
+        return self.width * self.height
+
     def __repr__(self):
         return str(self.__dict__)
 
