@@ -49,7 +49,7 @@ class ObjectDetector(TensorflowBaseModel):
                 rect = np.round(rect, 0).astype(int)
 
                 class_id = int(all_classes[image_index][detection_index])
-                name = self.label_map[str(class_id)]
+                name = self.label_map[class_id]
                 detections.append(Detection(name, rect, score))
             all_detections.append(detections)
         return all_detections
